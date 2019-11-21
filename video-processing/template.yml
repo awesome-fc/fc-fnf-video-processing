@@ -1,0 +1,105 @@
+ROSTemplateFormatVersion: '2015-09-01'
+Transform: 'Aliyun::Serverless-2018-04-03'
+Resources:
+  wb-video-demo:
+    Type: 'Aliyun::Serverless::Service'
+    Properties:
+      Description: fnf-video-processing
+      NasConfig: Auto
+      # LogConfig: # optional, config log for function excute
+      #   Project: auto-op-demo-pro
+      #   Logstore: fc-log
+      Policies:
+        - Version: '1' # Allow ListObjects, Get/PutObject, MNS SendMessage and FC InvokeFunction
+          Statement:
+            - Effect: Allow
+              Action:
+                - oss:ListObjects
+                - oss:GetObject
+                - oss:PutObject
+                - fc:InvokeFunction
+                - ots:*
+              Resource: '*'
+    split:
+      Type: 'Aliyun::Serverless::Function'
+      Properties:
+        Handler: index.handler
+        Runtime: python3
+        Timeout: 600
+        MemorySize: 1024
+        CodeUri: functions/split
+
+    extract-audio:
+      Type: 'Aliyun::Serverless::Function'
+      Properties:
+        Handler: index.handler
+        Runtime: python2.7
+        Timeout: 600
+        MemorySize: 1024
+        CodeUri: functions/extract-audio
+
+    transcode:
+      Type: 'Aliyun::Serverless::Function'
+      Properties:
+        Handler: index.handler
+        Runtime: python3
+        Timeout: 600
+        MemorySize: 1024
+        CodeUri: functions/transcode
+
+    merge:
+      Type: 'Aliyun::Serverless::Function'
+      Properties:
+        Handler: index.handler
+        Runtime: python3
+        Timeout: 600
+        MemorySize: 1024
+        CodeUri: functions/merge
+
+    after-process:
+      Type: 'Aliyun::Serverless::Function'
+      Properties:
+        Handler: index.handler
+        Runtime: python3
+        Timeout: 120
+        MemorySize: 128
+        CodeUri: ./functions/after-process
+
+  oss-trigger:
+    Type: 'Aliyun::Serverless::Service'
+    Properties:
+      Description: oss trigger function to call fnf to process video
+      # LogConfig: # optional, config log for function excute
+      #   Project: auto-op-demo-pro
+      #   Logstore: fc-log
+      Policies:
+        - Version: '1' # Allow ListObjects, Get/PutObject, MNS SendMessage and FC InvokeFunction
+          Statement:
+            - Effect: Allow
+              Action:
+                - fnf:*
+              Resource: '*'
+        
+    trigger-fnf:
+        Type: 'Aliyun::Serverless::Function'
+        Properties:
+          Handler: index.handler
+          Runtime: python3
+          Timeout: 120
+          MemorySize: 128
+          CodeUri: ./functions/oss-trigger
+          EnvironmentVariables:
+            OUTPUT_DST: fnf_video/outputs/oss-trigger/
+        Events:
+          oss-t:
+            Type: OSS
+            Properties:
+              Events:
+                - 'oss:ObjectCreated:PutObject'
+                - 'oss:ObjectCreated:PostObject'
+                - 'oss:ObjectCreated:CompleteMultipartUpload'
+              Filter:
+                Key:
+                  Prefix: fnf_video/inputs/
+                  Suffix: .mov
+              BucketName: fc-hz-demo  # change your bucket

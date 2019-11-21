@@ -1,0 +1,35 @@
+{
+  "ROSTemplateFormatVersion": "2015-09-01",
+  "Parameters": {
+    "DefinitionFC": {
+      "Type": "String",
+      "Description": "The definition of the created process follows the FDL syntax standard."
+    },
+    "RoleArn": {
+      "Type": "String",
+      "Description": "Optional parameter, the resource descriptor information required for the execution of the process, used to perform the assume role during FnF execution."
+    },
+    "FlowNameFC": {
+      "Type": "String",
+      "Description": "The name of the process created. This name is unique under the region."
+    }
+  },
+  "Resources": {
+    "FlowFC": {
+      "Type": "ALIYUN::FNF::Flow",
+      "Properties": {
+        "Description": "FnF video processing demo",
+        "Definition": {
+          "Ref": "DefinitionFC"
+        },
+        "RoleArn": {
+          "Ref": "RoleArn"
+        },
+        "Name": {
+          "Ref": "FlowNameFC"
+        }
+      }
+    }
+  },
+  "Outputs": {}
+}

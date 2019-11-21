@@ -1,0 +1,40 @@
+ROSTemplateFormatVersion: '2015-09-01'
+Transform: 'Aliyun::Serverless-2018-04-03'
+Resources:
+  oss-trigger:
+    Type: 'Aliyun::Serverless::Service'
+    Properties:
+      Description: oss trigger function to transcode video
+      Role: 'acs:ram::1986114430573743:role/fc-demo'
+      # LogConfig: # optional, config log for function excute
+      #   Project: auto-op-demo-pro
+      #   Logstore: fc-log
+      InternetAccess: true
+    transcode:
+      Type: 'Aliyun::Serverless::Function'
+      Properties:
+        Initializer: index.initializer
+        InitializationTimeout: 30
+        Handler: index.handler
+        Runtime: python3
+        Timeout: 600
+        MemorySize: 3072
+        EnvironmentVariables:
+          DST_TARGET: .mp4
+          FFMPEG_BIN_KEY: fnf_video/binary/ffmpeg
+          FFMPEG_BUKCET_NAME: fc-hz-demo
+          OUTPUT_DST: fnf_video/outputs/oss-trigger/
+        CodeUri: ./
+      Events:
+          oss-t:
+            Type: OSS
+            Properties:
+              Events:
+                - 'oss:ObjectCreated:PutObject'
+                - 'oss:ObjectCreated:PostObject'
+                - 'oss:ObjectCreated:CompleteMultipartUpload'
+              Filter:
+                Key:
+                  Prefix: fnf_video/inputs/
+                  Suffix: .mov
+              BucketName: fc-hz-demo # change your bucket

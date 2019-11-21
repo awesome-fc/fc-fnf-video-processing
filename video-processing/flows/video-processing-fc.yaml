@@ -1,0 +1,132 @@
+version: v1beta1
+type: flow
+steps:
+  - type: parallel
+    name: Process_Video
+    branches:
+      - steps:
+        - type: task
+          name: Extract_Audio
+          resourceArn: acs:fc:::services/wb-video-demo/functions/extract-audio
+      - steps:
+        - type: task
+          name: Split
+          resourceArn: acs:fc:::services/wb-video-demo/functions/split
+        - type: parallel
+          name: Transcode
+          branches:
+            - steps:
+                - type: foreach
+                  name: Transcode_splits_avi
+                  inputMappings:
+                    - source: .avi
+                      target: target_type
+                    - source: $input.split_keys
+                      target: split_keys
+                    - source: $input.output_prefix
+                      target: output_prefix
+                    - source: $input.oss_bucket_name
+                      target: oss_bucket_name
+                  iterationMapping:
+                    collection: $.split_keys
+                    index: index
+                    item: video_key
+                  steps:
+                    - type: task
+                      name: Transcode_avi
+                      resourceArn: acs:fc:::services/wb-video-demo/functions/transcode
+                - type: task
+                  name: Merge_avi
+                  resourceArn: acs:fc:::services/wb-video-demo/functions/merge
+                  inputMappings:
+                  - source: $input.video_key
+                    target: video_key
+                  - source: .avi
+                    target: target_type
+                  - source: $input.output_prefix
+                    target: output_prefix
+                  - source: $input.oss_bucket_name
+                    target: oss_bucket_name
+                  - source: $input.split_keys
+                    target: split_keys
+                  - source: $input.video_proc_dir
+                    target: video_proc_dir
+                  
+            - steps:
+                - type: foreach
+                  name: Transcode_splits_mp4
+                  inputMappings:
+                    - source: .mp4
+                      target: target_type
+                    - source: $input.split_keys
+                      target: split_keys
+                    - source: $input.output_prefix
+                      target: output_prefix
+                    - source: $input.oss_bucket_name
+                      target: oss_bucket_name
+                  iterationMapping:
+                    collection: $.split_keys
+                    index: index
+                    item: video_key
+                  steps:
+                    - type: task
+                      name: Transcode_mp4
+                      resourceArn: acs:fc:::services/wb-video-demo/functions/transcode
+                - type: task
+                  name: Merge_mp4
+                  resourceArn: acs:fc:::services/wb-video-demo/functions/merge
+                  inputMappings:
+                    - source: $input.video_key
+                      target: video_key
+                    - source: .mp4
+                      target: target_type
+                    - source: $input.output_prefix
+                      target: output_prefix
+                    - source: $input.oss_bucket_name
+                      target: oss_bucket_name
+                    - source: $input.split_keys
+                      target: split_keys
+                    - source: $input.video_proc_dir
+                      target: video_proc_dir
+            - steps:
+                - type: foreach
+                  name: Transcode_splits_flv
+                  inputMappings:
+                    - source: .flv
+                      target: target_type
+                    - source: $input.split_keys
+                      target: split_keys
+                    - source: $input.output_prefix
+                      target: output_prefix
+                    - source: $input.oss_bucket_name
+                      target: oss_bucket_name
+                  iterationMapping:
+                    collection: $.split_keys
+                    index: index
+                    item: video_key
+                  steps:
+                    - type: task
+                      name: Transcode_flv
+                      resourceArn: acs:fc:::services/wb-video-demo/functions/transcode
+                - type: task
+                  name: Merge_flv
+                  resourceArn: acs:fc:::services/wb-video-demo/functions/merge
+                  inputMappings:
+                    - source: $input.video_key
+                      target: video_key
+                    - source: .flv
+                      target: target_type
+                    - source: $input.output_prefix
+                      target: output_prefix
+                    - source: $input.oss_bucket_name
+                      target: oss_bucket_name
+                    - source: $input.split_keys
+                      target: split_keys
+                    - source: $input.video_proc_dir
+                      target: video_proc_dir
+          outputMappings:
+            - target: video_proc_dir
+              source: $input.video_proc_dir
+        - type: task
+          name: after-process
+          resourceArn: acs:fc:::services/wb-video-demo/functions/after-process

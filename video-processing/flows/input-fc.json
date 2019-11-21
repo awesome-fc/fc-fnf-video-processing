@@ -1,0 +1,6 @@
+{
+  "oss_bucket_name": "fnf-test",
+  "video_key": "fnf_video/inputs/fc-official-short.mov",
+  "output_prefix": "fnf_video/outputs/fc/1",
+  "segment_time_seconds": 5
+}
