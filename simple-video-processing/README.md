@@ -28,7 +28,7 @@ git clone http://gitlab.alibaba-inc.com/ls147258/fc-video-process.git
 
 - 先在响应的 region 指定的目录上传 FFmpeg 可执行文件到 OSS 上， 比如该示例是在杭州名为 fc-hz-demo 的 bucket 的 fnf_video/binary/ffmpeg 目录中
 
-> FFmpeg 可执行文件可以直接使用 video-processing/.fun/nas/auto-default/wb-video-demo/ffmpeg, 也可以从 [https://www.johnvansickle.com/ffmpeg/](https://www.johnvansickle.com/ffmpeg/) 下载最新版。
+> FFmpeg 可执行文件可以直接使用 video-processing/.fun/nas/auto-default/video-demo/ffmpeg, 也可以从 [https://www.johnvansickle.com/ffmpeg/](https://www.johnvansickle.com/ffmpeg/) 下载最新版。
 
 - 更新 template.yml 文件， 如下图所示：
     ![image](diy.png)

@@ -11,7 +11,7 @@ from aliyunsdkcore.auth.credentials import StsTokenCredential
 LOGGER = logging.getLogger()
 
 OUTPUT_DST = os.environ["OUTPUT_DST"]
-FLOW_NAME = "video-fc-prod-fc"
+FLOW_NAME = os.environ["FLOW_NAME"]
 
 def handler(event, context):
     evt = json.loads(event)

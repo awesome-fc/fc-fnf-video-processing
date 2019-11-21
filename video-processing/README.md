@@ -30,33 +30,38 @@ git clone http://gitlab.alibaba-inc.com/ls147258/fc-video-process.git
 
 - 将 template.yml 文件中 `trigger-fnf` 函数的中 Event 中 bucketName 修改成自己的
 
-> 注: 如果修改 template.yml 中的 serviceName, 需要先执行 `fun nas init`, 生成本地对应的目录 `.fun/nas/auto-default/$(yourServiceName)`, 然后将 ffmpeg 和 ffprobe 的 binary 拷贝到该目录下。 ffmpeg 的 binary 可以直接使用.fun/nas/auto-default/wb-video-demo/ffmpeg， 也可以从 [https://www.johnvansickle.com/ffmpeg/](https://www.johnvansickle.com/ffmpeg/) 下载最新版。
+> 注: 如果修改 template.yml 中的 serviceName, 需要先执行 `fun nas init`, 生成本地对应的目录 `.fun/nas/auto-default/$(yourServiceName)`, 然后将 ffmpeg 和 ffprobe 的 binary 拷贝到该目录下。 ffmpeg 的 binary 可以直接使用.fun/nas/auto-default/video-demo/ffmpeg， 也可以从 [https://www.johnvansickle.com/ffmpeg/](https://www.johnvansickle.com/ffmpeg/) 下载最新版。
 
 ```bash
 # 替换 {your_account_id}
-ACCOUNT_ID={your_account_Id} REGION=cn-hangzhou ACTION=create FLOW_NAME=fnf-video-demo ./deploy.sh
+ACCOUNT_ID={your_account_Id} REGION=cn-hangzhou ACTION=create FLOW_NAME=video-demo ./deploy.sh
 ```
 
 * 注：如需更新流程 （flow）可执行 update 操作，将 create 操作中返回的 StackID 替换 {stack_id}
+* 如果 FLOW_NAME 不为 video-demo, 记得修改将 template.yml 文件中 `trigger-fnf` 函数中的环境变量 FLOW_NAME 修改
 
 ```bash
 # 替换 {your_account_id}
-ACCOUNT_ID={your_account_Id} REGION=cn-hangzhou ACTION=update STACK_ID={stack_id} FLOW_NAME=fnf-video-demo ./deploy.sh
+ACCOUNT_ID={your_account_Id} REGION=cn-hangzhou ACTION=update STACK_ID={stack_id} FLOW_NAME=video-demo ./deploy.sh
 ```
 
 后面如果只是更新函数， 只需要执行 `fun deploy` 即可
 
 ## 编排测试 FC 函数的工作流
-第1步： 在[函数工作流控制台](https://fnf.console.aliyun.com/fnf/cn-hangzhou/flows)开始 fnf-video-demo-fc 的执行，input 如下，替换 {your-bucket-name}：
+第1步： 在[函数工作流控制台](https://fnf.console.aliyun.com/fnf/cn-hangzhou/flows)开始 video-demo 的执行，input 如下，替换 {your-bucket-name}：
 ```json
 {
   "oss_bucket_name": "{your-bucket-name}",
   "video_key": "fnf_video/inputs/fc-official-short.mov",
   "output_prefix": "fnf_video/outputs/fc/1",
-  "segment_time_seconds": 5
+  "segment_time_seconds": 10
 }
 ```
 
 第2步： 在控制台观察流程执行
 
 ## OSS 上传视频, 触发整个转码流程
+
+**效果示意图**
+
+![](https://fc-hz-demo.oss-cn-hangzhou.aliyuncs.com/gif/fnf-video-process.gif)
