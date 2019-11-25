@@ -1,10 +1,10 @@
 ## 简介
 
-如图所示， 假设用户上传一个 mov 格式的视频到 OSS, OSS 触发器自动触发函数执行， 函数调用 FnF 执行， FnF 会并行进行提取音频文件，同时进行 avi, mp4, flv 格式的转码。 
+本项目是[轻松构建基于 Serverless 架构的弹性高可用音视频处理系统](https://yq.aliyun.com/articles/727684) 的示例工程
 
-![image](flow.png)
+如下图所示， 假设用户上传一个 mov 格式的视频到 OSS, OSS 触发器自动触发函数执行， 函数调用 FnF 执行， FnF 会并行进行提取音频文件，同时进行 avi, mp4, flv 格式的转码。
 
-所以您可以实现如下需求：
+您可以实现如下需求：
 
 - 一个视频文件可以同时被转码成各种格式以及其他各种自定义处理，比如增加水印处理或者 在 after-process 更新信息到数据库等
 
@@ -14,14 +14,19 @@
 
 - 结合 NAS + 视频分片, 可以解决超大视频(大于3G)的转码
 
+![image](flow.png)
+
+您可以直接基于示例工程部署您的全功能视频处理系统服务， 但是当您想要处理视频逻辑消耗的内存不超过3G，处理时间不超过 10 min，即可以在一次函数执行完成的情况下，这个时候您可以直接参考[简单视频处理系统示例](https://github.com/awesome-fc/fc-fnf-video-processing/tree/master/simple-video-processing)
+
 ## 步骤
-1. 开通相关云服务: [函数计算](https://fc.console.aliyun.com/)， [函数工作流](https://fnf.console.aliyun.com/)，[对象存储](https://oss.console.aliyun.com/)， [资源编排](https://rosnext.console.aliyun.com/)
+1. 开通相关云服务: [函数计算](http://statistics.cn-shanghai.1221968287646227.cname-test.fc.aliyun-inc.com/?title=ServerlessVideo&theme=ServerlessVideo&author=rsong&type=click&url=http://fc.console.aliyun.com)， [函数工作流](http://statistics.cn-shanghai.1221968287646227.cname-test.fc.aliyun-inc.com/?title=ServerlessVideo&theme=ServerlessVideo&author=rsong&type=click&url=http://fnf.console.aliyun.com)， [资源编排](https://rosnext.console.aliyun.com/)， [文件存储服务NAS](https://nas.console.aliyun.com/)，[对象存储 OSS](oss.console.aliyun.com/)
+
 2. 安装并配置 [Fun 工具](https://help.aliyun.com/document_detail/64204.html)
 3. 安装并配置 [aliyun CLI](https://help.aliyun.com/document_detail/110343.html)
 4. 部署 FC, FnF 资源
 
 ```bash
-git clone http://gitlab.alibaba-inc.com/ls147258/fc-video-process.git
+git clone  https://github.com/awesome-fc/fc-fnf-video-processing.git
 ```
 
 进入 `video-process` 目录
@@ -64,4 +69,4 @@ ACCOUNT_ID={your_account_Id} REGION=cn-hangzhou ACTION=update STACK_ID={stack_id
 
 **效果示意图**
 
-![](https://fc-hz-demo.oss-cn-hangzhou.aliyuncs.com/gif/fnf-video-process.gif)
+![](fnf-video-process.gif)

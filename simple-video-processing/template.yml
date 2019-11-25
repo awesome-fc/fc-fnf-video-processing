@@ -5,10 +5,19 @@ Resources:
     Type: 'Aliyun::Serverless::Service'
     Properties:
       Description: oss trigger function to transcode video
-      Role: 'acs:ram::1986114430573743:role/fc-demo'
       # LogConfig: # optional, config log for function excute
       #   Project: auto-op-demo-pro
       #   Logstore: fc-log
+      Policies:
+        - Version: '1' # Allow ListObjects, Get/PutObject, and FC InvokeFunction
+          Statement:
+            - Effect: Allow
+              Action:
+                - oss:ListObjects
+                - oss:GetObject
+                - oss:PutObject
+                - fc:InvokeFunction
+              Resource: '*'
       InternetAccess: true
     transcode:
       Type: 'Aliyun::Serverless::Function'

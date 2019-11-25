@@ -10,6 +10,10 @@ simple-video-processing 是基于函数计算 (FC) 实现的简单视频处理(�
 
 video-processing 是基于函数计算 (FC) + 函数工作流（FnF）实现的全功能视频处理(转码)系统。
 
+[免费开通函数计算](http://statistics.cn-shanghai.1221968287646227.cname-test.fc.aliyun-inc.com/?title=ServerlessVideo&theme=ServerlessVideo&author=rsong&type=click&url=http://fc.console.aliyun.com)，按量付费，函数计算有很大的免费额度。
+
+[免费开通函数工作流](http://statistics.cn-shanghai.1221968287646227.cname-test.fc.aliyun-inc.com/?title=ServerlessVideo&theme=ServerlessVideo&author=rsong&type=click&url=http://fnf.console.aliyun.com)，按量付费，函数工作流有很大的免费额度。
+
 ## 简单视频处理系统
 
 假设您是对短视频进行简单的处理， 架构方案图如下：

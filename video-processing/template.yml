@@ -10,7 +10,7 @@ Resources:
       #   Project: auto-op-demo-pro
       #   Logstore: fc-log
       Policies:
-        - Version: '1' # Allow ListObjects, Get/PutObject, MNS SendMessage and FC InvokeFunction
+        - Version: '1' # Allow ListObjects, Get/PutObject, and FC InvokeFunction
           Statement:
             - Effect: Allow
               Action:
