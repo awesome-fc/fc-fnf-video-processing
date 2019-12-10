@@ -44,7 +44,7 @@ Resources:
         Handler: index.handler
         Runtime: python3
         Timeout: 600
-        MemorySize: 1024
+        MemorySize: 3072
         CodeUri: functions/transcode
 
     merge:

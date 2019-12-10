@@ -41,6 +41,13 @@ def handler(event, context):
     output_prefix = evt['output_prefix']
     video_type = evt['target_type']
     video_process_dir = evt['video_proc_dir']
+    
+    transcoded_split_keys = []
+    for k in split_keys:
+        fileDir, shortname, extension = get_fileNameExt(k)
+        transcoded_filename = 'transcoded_%s%s' % (shortname, video_type)
+        transcoded_filepath = os.path.join(fileDir, transcoded_filename)
+        transcoded_split_keys.append(transcoded_filepath)
 
     creds = context.credentials
     auth = oss2.StsAuth(creds.accessKeyId,
@@ -48,12 +55,12 @@ def handler(event, context):
     oss_client = oss2.Bucket(
         auth, 'oss-%s-internal.aliyuncs.com' % context.region, oss_bucket_name)
 
-    if len(split_keys) == 0:
-        raise Exception("no split_keys")
+    if len(transcoded_split_keys) == 0:
+        raise Exception("no transcoded_split_keys")
     
     LOGGER.info({
         "target_type": video_type,
-        "split_keys": split_keys
+        "transcoded_split_keys": transcoded_split_keys
     })
     
     _, shortname, extension = get_fileNameExt(video_key)
@@ -64,7 +71,7 @@ def handler(event, context):
         os.remove(segs_filepath)
 
     with open(segs_filepath, 'a+') as f:
-        for filepath in split_keys:
+        for filepath in transcoded_split_keys:
             f.write("file '%s'\n" % filepath)
 
     merged_filename = 'merged_' + shortname + video_type
