@@ -35,7 +35,7 @@ git clone  https://github.com/awesome-fc/fc-fnf-video-processing.git
 
 - 将 template.yml 文件中 `trigger-fnf` 函数的中 Event 中 bucketName 修改成自己的
 
-> 注: 如果修改 template.yml 中的 serviceName, 需要先执行 `fun nas init`, 生成本地对应的目录 `.fun/nas/auto-default/$(yourServiceName)`, 然后将 ffmpeg 和 ffprobe 的 binary 拷贝到该目录下。 ffmpeg 的 binary 可以直接使用.fun/nas/auto-default/video-demo/ffmpeg， 也可以从 [https://www.johnvansickle.com/ffmpeg/](https://www.johnvansickle.com/ffmpeg/) 下载最新版。
+> 注: 如果修改 template.yml 中的 serviceName, 需要先执行 `fun nas init`, 生成本地对应的目录 `.fun/nas/auto-default/$(yourServiceName)`, 然后将 ffmpeg 和 ffprobe 的 binary 拷贝到该目录下。 ffmpeg 的 binary 可以直接使用.fun/nas/auto-default/video-demo 目录下面的 ffmpeg 和 ffprobe。
 
 ```bash
 # 替换 {your_account_id}

@@ -54,6 +54,7 @@ def handler(event, context):
     video_proc_dir = NAS_ROOT + context.request_id
     #os.system("mkdir -p {}".format(video_proc_dir))
     os.mkdir(video_proc_dir)
+    os.system("chmod -R 777 " + video_proc_dir)
 
     creds = context.credentials
     auth = oss2.StsAuth(creds.accessKeyId, creds.accessKeySecret, creds.securityToken)
