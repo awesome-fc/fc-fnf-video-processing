@@ -12,7 +12,7 @@
 
 ## 操作部署
 
-[免费开通函数计算](http://statistics.cn-shanghai.1221968287646227.cname-test.fc.aliyun-inc.com/?title=ServerlessVideo&theme=ServerlessVideo&author=rsong&type=click&url=http://fc.console.aliyun.com)，按量付费，函数计算有很大的免费额度。
+[免费开通函数计算](https://statistics.functioncompute.com/?title=ServerlessVideo&theme=ServerlessVideo&author=rsong&src=article&url=http://fc.console.aliyun.com)，按量付费，函数计算有很大的免费额度。
 
 [免费开通对象存储 OSS](oss.console.aliyun.com/)
 
