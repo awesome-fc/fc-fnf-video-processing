@@ -103,4 +103,12 @@ Resources:
                 Key:
                   Prefix: fnf_video/inputs/
                   Suffix: .mov
-              BucketName: fc-hz-demo  # change your bucket
+              BucketName: fc-hz-demo  # change to your bucket
+
+  video-demo:
+    Type: 'Aliyun::Serverless::Flow'
+    Properties:
+      Description: batch process flow
+      DefinitionUri: flows/video-processing-fc.yaml
+      Policies:
+        - AliyunFCInvocationAccess

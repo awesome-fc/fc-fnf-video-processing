@@ -22,8 +22,8 @@
 1. 免费开通相关云服务: [函数计算](https://statistics.functioncompute.com/?title=ServerlessVideo&theme=ServerlessVideo&author=rsong&src=article&url=http://fc.console.aliyun.com)， [函数工作流](https://statistics.functioncompute.com/?title=ServerlessVideo&theme=ServerlessVideo&author=rsong&src=article&url=http://fnf.console.aliyun.com)， [资源编排](https://rosnext.console.aliyun.com/)， [文件存储服务NAS](https://nas.console.aliyun.com/)，[对象存储 OSS](oss.console.aliyun.com/)
 
 2. 安装并配置 [Fun 工具](https://help.aliyun.com/document_detail/64204.html)
-3. 安装并配置 [aliyun CLI](https://help.aliyun.com/document_detail/110343.html)
-4. 部署 FC, FnF 资源
+
+3. 部署 FC, FnF 资源
 
 ```bash
 git clone  https://github.com/awesome-fc/fc-fnf-video-processing.git
@@ -38,22 +38,14 @@ git clone  https://github.com/awesome-fc/fc-fnf-video-processing.git
 > 注: 如果修改 template.yml 中的 serviceName, 需要先执行 `fun nas init`, 生成本地对应的目录 `.fun/nas/auto-default/$(yourServiceName)`, 然后将 ffmpeg 和 ffprobe 的 binary 拷贝到该目录下。 ffmpeg 的 binary 可以直接使用.fun/nas/auto-default/video-demo 目录下面的 ffmpeg 和 ffprobe。
 
 ```bash
-# 替换 {your_account_id}
-ACCOUNT_ID={your_account_Id} REGION=cn-hangzhou ACTION=create FLOW_NAME=video-demo ./deploy.sh
+./deploy.sh
 ```
 
-* 注：如需更新流程 （flow）可执行 update 操作，将 create 操作中返回的 StackID 替换 {stack_id}
-* 如果 FLOW_NAME 不为 video-demo, 记得修改将 template.yml 文件中 `trigger-fnf` 函数中的环境变量 FLOW_NAME 修改
-
-```bash
-# 替换 {your_account_id}
-ACCOUNT_ID={your_account_Id} REGION=cn-hangzhou ACTION=update STACK_ID={stack_id} FLOW_NAME=video-demo ./deploy.sh
-```
-
-后面如果只是更新函数， 只需要执行 `fun deploy` 即可
+后面如果更新函数或者流程(不修改 serviceName 创建新的 service)， 只需要执行 `fun deploy` 即可
 
 ## 编排测试 FC 函数的工作流
 第1步： 在[函数工作流控制台](https://fnf.console.aliyun.com/fnf/cn-hangzhou/flows)开始 video-demo 的执行，input 如下，替换 {your-bucket-name}：
+
 ```json
 {
   "oss_bucket_name": "{your-bucket-name}",
