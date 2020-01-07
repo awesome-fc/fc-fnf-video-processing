@@ -30,9 +30,9 @@ Resources:
         MemorySize: 3072
         EnvironmentVariables:
           DST_TARGET: .mp4
-          FFMPEG_BIN_KEY: fnf_video/binary/ffmpeg
+          FFMPEG_BIN_KEY: binary/ffmpeg
           FFMPEG_BUKCET_NAME: fc-hz-demo
-          OUTPUT_DST: fnf_video/outputs/oss-trigger/
+          OUTPUT_DST: simple_video/outputs/
         CodeUri: ./
       Events:
           oss-t:
@@ -44,6 +44,6 @@ Resources:
                 - 'oss:ObjectCreated:CompleteMultipartUpload'
               Filter:
                 Key:
-                  Prefix: fnf_video/inputs/
+                  Prefix: simple_video/inputs/
                   Suffix: .mov
               BucketName: fc-hz-demo # change your bucket

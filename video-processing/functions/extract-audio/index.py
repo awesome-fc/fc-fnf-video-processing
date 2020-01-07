@@ -51,7 +51,7 @@ def handler(event, context):
 
     mp3_filename = '{}.mp3'.format(shortname)
     mp3_filepath = video_proc_dir + "/" + mp3_filename
-    mp3_key = os.path.join(output_prefix, mp3_filename)
+    mp3_key = os.path.join(output_prefix, shortname, mp3_filename)
 
     if os.path.exists(mp3_filepath):
         os.remove(mp3_filepath)

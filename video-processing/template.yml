@@ -90,7 +90,7 @@ Resources:
           CodeUri: ./functions/oss-trigger
           EnvironmentVariables:
             OUTPUT_DST: fnf_video/outputs/oss-trigger/
-            FLOW_NAME: video-demo
+            FLOW_NAME: video-demo-flow
         Events:
           oss-t:
             Type: OSS
@@ -104,11 +104,10 @@ Resources:
                   Prefix: fnf_video/inputs/
                   Suffix: .mov
               BucketName: fc-hz-demo  # change to your bucket
-
-  video-demo:
+  video-demo-flow:
     Type: 'Aliyun::Serverless::Flow'
     Properties:
-      Description: batch process flow
+      Description: FnF video processing demo flow
       DefinitionUri: flows/video-processing-fc.yaml
       Policies:
         - AliyunFCInvocationAccess

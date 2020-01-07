@@ -84,7 +84,7 @@ def handler(event, context):
                      segs_filepath, '-c', 'copy', '-fflags', '+genpts', merged_filepath])
 
     LOGGER.info('output_prefix ' + output_prefix)
-    merged_key = os.path.join(output_prefix, merged_filename)
+    merged_key = os.path.join(output_prefix, shortname, merged_filename)
     oss_client.put_object_from_file(merged_key, merged_filepath)
     LOGGER.info("Uploaded %s to %s" % (merged_filepath, merged_key))
 
