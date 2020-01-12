@@ -15,6 +15,23 @@ LOGGER = logging.getLogger()
 NAS_ROOT = "/mnt/auto/"
 FFMPEG_BIN = NAS_ROOT + "ffmpeg"
 
+class FFmpegError(Exception):
+    def __init__(self, message, status):
+        super().__init__(message, status)
+        self.message = message
+        self.status = status
+
+def exec_FFmpeg_cmd(cmd_lst):
+    try:
+        subprocess.check_call(cmd_lst)
+    except subprocess.CalledProcessError as exc:
+        LOGGER.error('returncode:{}'.format(exc.returncode))
+        LOGGER.error('cmd:{}'.format(exc.cmd))
+        LOGGER.error('output:{}'.format(exc.output))
+        # log json to Log Service as db
+        # or insert record in mysql, etc
+        raise FFmpegError(exc.output, exc.returncode)
+
 # a decorator for print the excute time of a function
 def print_excute_time(func):
     def wrapper(*args, **kwargs):
@@ -55,8 +72,8 @@ def handler(event, context):
 
     if os.path.exists(mp3_filepath):
         os.remove(mp3_filepath)
-
-    subprocess.call([ FFMPEG_BIN, '-i', input_path, '-q:a',
+        
+    exec_FFmpeg_cmd([FFMPEG_BIN, '-i', input_path, '-q:a',
                      '0', '-map', 'a', mp3_filepath])
     
     oss_client.put_object_from_file(mp3_key, mp3_filepath)

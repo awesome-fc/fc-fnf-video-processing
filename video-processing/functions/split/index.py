@@ -18,6 +18,23 @@ NAS_ROOT = "/mnt/auto/"
 FFMPEG_BIN = NAS_ROOT + "ffmpeg"
 FFPROBE_BIN = NAS_ROOT + "ffprobe"
 
+class FFmpegError(Exception):
+    def __init__(self, message, status):
+        super().__init__(message, status)
+        self.message = message
+        self.status = status
+
+def exec_FFmpeg_cmd(cmd_lst):
+    try:
+        subprocess.check_call(cmd_lst)
+    except subprocess.CalledProcessError as exc:
+        LOGGER.error('returncode:{}'.format(exc.returncode))
+        LOGGER.error('cmd:{}'.format(exc.cmd))
+        LOGGER.error('output:{}'.format(exc.output))
+        # log json to Log Service as db
+        # or insert record in mysql, etc
+        raise FFmpegError(exc.output, exc.returncode)
+
 # a decorator for print the excute time of a function
 def print_excute_time(func):
     def wrapper(*args, **kwargs):
@@ -71,7 +88,7 @@ def handler(event, context):
         segment_time_seconds = int(math.ceil(video_duration/MAX_SPLIT_NUM)) + 1
     
     segment_time_seconds = str(segment_time_seconds)
-    subprocess.call([FFMPEG_BIN, '-i', input_path, "-c", "copy", "-f", "segment", "-segment_time",
+    exec_FFmpeg_cmd([FFMPEG_BIN, '-i', input_path, "-c", "copy", "-f", "segment", "-segment_time",
                      segment_time_seconds, "-reset_timestamps", "1", video_proc_dir + "/split_" + shortname + '_piece_%02d' + extension])
 
     split_keys = []
