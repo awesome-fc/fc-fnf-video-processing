@@ -79,7 +79,7 @@ Resources:
               Action:
                 - fnf:*
               Resource: '*'
-        
+
     trigger-fnf:
         Type: 'Aliyun::Serverless::Function'
         Properties:
@@ -104,6 +104,7 @@ Resources:
                   Prefix: fnf_video/inputs/
                   Suffix: .mov
               BucketName: fc-hz-demo  # change to your bucket
+
   video-demo-flow:
     Type: 'Aliyun::Serverless::Flow'
     Properties:

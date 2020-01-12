@@ -10,6 +10,23 @@ LOGGER = logging.getLogger()
 NAS_ROOT = "/mnt/auto/"
 FFMPEG_BIN = NAS_ROOT + "ffmpeg"
 
+class FFmpegError(Exception):
+    def __init__(self, message, status):
+        super().__init__(message, status)
+        self.message = message
+        self.status = status
+
+def exec_FFmpeg_cmd(cmd_lst):
+    try:
+        subprocess.check_call(cmd_lst)
+    except subprocess.CalledProcessError as exc:
+        LOGGER.error('returncode:{}'.format(exc.returncode))
+        LOGGER.error('cmd:{}'.format(exc.cmd))
+        LOGGER.error('output:{}'.format(exc.output))
+        # log json to Log Service as db
+        # or insert record in mysql, etc
+        raise FFmpegError(exc.output, exc.returncode)
+
 # a decorator for print the excute time of a function
 def print_excute_time(func):
     def wrapper(*args, **kwargs):
@@ -39,6 +56,6 @@ def handler(event, context):
     if os.path.exists(transcoded_filepath):
         os.remove(transcoded_filepath)
 
-    subprocess.call([FFMPEG_BIN, '-y', '-i', input_path, transcoded_filepath])
+    exec_FFmpeg_cmd([FFMPEG_BIN, '-y', '-i', input_path, transcoded_filepath])
     return {}
     
