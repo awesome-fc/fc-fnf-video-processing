@@ -1,5 +1,9 @@
 ROSTemplateFormatVersion: '2015-09-01'
 Transform: 'Aliyun::Serverless-2018-04-03'
+Parameters:
+  BucketName:
+    Type: String
+    Description: 'oss bucket name'
 Resources:
   video-demo:
     Type: 'Aliyun::Serverless::Service'
@@ -90,7 +94,10 @@ Resources:
           CodeUri: ./functions/oss-trigger
           EnvironmentVariables:
             OUTPUT_DST: fnf_video/outputs/oss-trigger/
-            FLOW_NAME: video-demo-flow
+            FLOW_NAME: 
+              'Fn::GetAtt':
+                - video-demo-flow
+                - Name
         Events:
           oss-t:
             Type: OSS
@@ -103,7 +110,8 @@ Resources:
                 Key:
                   Prefix: fnf_video/inputs/
                   Suffix: .mov
-              BucketName: fc-hz-demo  # change to your bucket
+              BucketName: 
+                Ref: BucketName
 
   video-demo-flow:
     Type: 'Aliyun::Serverless::Flow'

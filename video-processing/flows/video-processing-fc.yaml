@@ -7,7 +7,7 @@ steps:
       - steps:
         - type: task
           name: Extract_Audio
-          resourceArn: acs:fc:::services/video-demo/functions/extract-audio
+          resourceArn: !Ref video-demo/extract-audio
           retry:
             - errors:
               - FC.ResourceThrottled
@@ -21,7 +21,7 @@ steps:
       - steps:
         - type: task
           name: Split
-          resourceArn: acs:fc:::services/video-demo/functions/split
+          resourceArn: !Ref video-demo/split
           retry:
             - errors:
               - FC.ResourceThrottled
@@ -54,7 +54,7 @@ steps:
                   steps:
                     - type: task
                       name: Transcode_avi
-                      resourceArn: acs:fc:::services/video-demo/functions/transcode
+                      resourceArn: !Ref video-demo/transcode
                       retry:
                         - errors:
                           - FC.ResourceThrottled
@@ -67,7 +67,8 @@ steps:
                           multiplier: 2
                 - type: task
                   name: Merge_avi
-                  resourceArn: acs:fc:::services/video-demo/functions/merge
+                  resourceArn: !Ref video-demo/merge
+                        
                   retry:
                     - errors:
                       - FC.ResourceThrottled
@@ -111,7 +112,8 @@ steps:
                   steps:
                     - type: task
                       name: Transcode_mp4
-                      resourceArn: acs:fc:::services/video-demo/functions/transcode
+                      resourceArn: !Ref video-demo/transcode
+                  
                       retry:
                         - errors:
                           - FC.ResourceThrottled
@@ -124,7 +126,8 @@ steps:
                           multiplier: 2
                 - type: task
                   name: Merge_mp4
-                  resourceArn: acs:fc:::services/video-demo/functions/merge
+                  resourceArn: !Ref video-demo/merge
+                       
                   retry:
                     - errors:
                       - FC.ResourceThrottled
@@ -167,7 +170,8 @@ steps:
                   steps:
                     - type: task
                       name: Transcode_flv
-                      resourceArn: acs:fc:::services/video-demo/functions/transcode
+                      resourceArn: !Ref video-demo/transcode
+                       
                       retry:
                         - errors:
                           - FC.ResourceThrottled
@@ -180,7 +184,8 @@ steps:
                           multiplier: 2
                 - type: task
                   name: Merge_flv
-                  resourceArn: acs:fc:::services/video-demo/functions/merge
+                  resourceArn: !Ref video-demo/merge
+                        
                   retry:
                     - errors:
                       - FC.ResourceThrottled
@@ -209,7 +214,8 @@ steps:
               source: $input.video_proc_dir
         - type: task
           name: after-process
-          resourceArn: acs:fc:::services/video-demo/functions/after-process
+          resourceArn: !Ref video-demo/after-process
+            
           retry:
             - errors:
               - FC.ResourceThrottled
