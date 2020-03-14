@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import json
+import re
 import logging
 
 from aliyunsdkcore.client import AcsClient
@@ -12,6 +13,7 @@ LOGGER = logging.getLogger()
 
 OUTPUT_DST = os.environ["OUTPUT_DST"]
 FLOW_NAME = os.environ["FLOW_NAME"]
+SEG_INTERVAL = os.environ["SEG_INTERVAL"]
 
 def handler(event, context):
     evt = json.loads(event)
@@ -27,13 +29,16 @@ def handler(event, context):
         "oss_bucket_name": oss_bucket_name,
         "video_key": object_key,
         "output_prefix": OUTPUT_DST,
-        "segment_time_seconds": 25  # 视频 25 s 一个分片
+        "segment_time_seconds": int(SEG_INTERVAL)
     }
     
     try:
         request = StartExecutionRequest.StartExecutionRequest()
         request.set_FlowName(FLOW_NAME)
         request.set_Input(json.dumps(input))
+        execution_name = re.sub(
+            r"[^a-zA-Z0-9-_]", "_", object_key) + "-" + context.request_id
+        request.set_ExecutionName(execution_name)
         return client.do_action_with_exception(request)
     except ServerException as e:
         LOGGER.info(e.get_request_id())
