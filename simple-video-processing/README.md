@@ -1,14 +1,20 @@
 ## 简介
 
-本项目是[轻松构建基于 Serverless 架构的弹性高可用视频处理系统](https://yq.aliyun.com/articles/727684) 的示例工程
+本项目是[轻松构建基于 Serverless 架构的弹性高可用视频处理系统](https://yq.aliyun.com/articles/727684) 的示例工程。
+
+![](https://img.alicdn.com/tfs/TB1SKvrzbr1gK0jSZFDXXb9yVXa-58-38.png)
+最新有关 simple-video-processing 的内容请移步到 [simple-video-processing](https://github.com/awesome-fc/simple-video-processing)
+
+
+## deprecated
 
 假设您是对短视频进行简单的处理， 架构方案图如下：
 
-![image](main.png)
+![](https://img.alicdn.com/tfs/TB1whybzbj1gK0jSZFuXXcrHpXa-758-329.png)
 
 如上图所示， 用户上传一个视频到 OSS, OSS 触发器自动触发函数执行， 函数调用 FFmpeg 进行视频转码， 并且将转码后的视频保存回 OSS。
 
-您可以直接基于示例工程部署您的简单视频处理系统服务， 但是当您想要处理大视频(比如 test_huge.mov ) 或者对小视频进行多种耗时较长组合操作的时候，您会发现函数很大概率会执行失败，原因是函数计算的执行环境存在一些限制， 比如最大执行时间为 10 分钟， 最大内存为 3G。这个时候您可以参考[全功能视频处理系统示例](https://github.com/awesome-fc/fc-fnf-video-processing/tree/master/video-processing)
+您可以直接基于示例工程部署您的简单视频处理系统服务， 但是当您想要处理大视频(比如 test_huge.mov ) 或者对小视频进行多种耗时较长组合操作的时候，您会发现函数很大概率会执行失败，原因是函数计算的执行环境存在一些限制， 比如最大执行时间为 10 分钟。这个时候您可以参考[全功能视频处理系统示例](https://github.com/awesome-fc/fc-fnf-video-processing/tree/master/video-processing)
 
 ## 操作部署
 
@@ -39,7 +45,7 @@ git clone  https://github.com/awesome-fc/fc-fnf-video-processing.git
 > FFmpeg 可执行文件可以直接使用 video-processing/.fun/nas/auto-default/video-demo/ffmpeg
 
 - 更新 template.yml 文件， 如下图所示：
-    ![image](diy.png)
+    ![image](https://img.alicdn.com/tfs/TB1tMznzhD1gK0jSZFKXXcJrVXa-1456-978.png)
     > 其中 2 必须更改，因为 bucket 名字是唯一的， 其他可以参考，不用修改
 
 - 执行 `fun deploy`
