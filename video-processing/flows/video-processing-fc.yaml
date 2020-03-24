@@ -1,222 +1,72 @@
 version: v1beta1
 type: flow
 steps:
-  - type: parallel
-    name: Process_Video
-    branches:
-      - steps:
-        - type: task
-          name: Extract_Audio
-          resourceArn: acs:fc:::services/video-demo/functions/extract-audio
-          retry:
-            - errors:
+  - type: task
+    name: Split
+    resourceArn: 'acs:fc:::services/video-demo/functions/split'
+    retry:
+      - errors:
+          - FC.ResourceThrottled
+          - FC.ResourceExhausted
+          - FC.InternalServerError
+          - FnF.TaskTimeout
+          - FC.Unknown
+        intervalSeconds: 3
+        maxAttempts: 16
+        multiplier: 2
+  - type: foreach
+    name: ParallelTranscode
+    iterationMapping:
+      collection: $.dst_formats
+      index: index
+      item: target_type
+    steps:
+      - type: foreach
+        name: Transcode_splits
+        iterationMapping:
+          collection: $.split_keys
+          index: index
+          item: split_video_key
+        steps:
+          - type: task
+            name: Transcode
+            resourceArn: 'acs:fc:::services/video-demo/functions/transcode'
+            retry:
+              - errors:
+                  - FC.ResourceThrottled
+                  - FC.ResourceExhausted
+                  - FC.InternalServerError
+                  - FnF.TaskTimeout
+                  - FC.Unknown
+                intervalSeconds: 3
+                maxAttempts: 16
+                multiplier: 2
+      - type: task
+        name: Merge
+        resourceArn: 'acs:fc:::services/video-demo/functions/merge'
+        retry:
+          - errors:
               - FC.ResourceThrottled
               - FC.ResourceExhausted
               - FC.InternalServerError
               - FnF.TaskTimeout
               - FC.Unknown
-              intervalSeconds: 3
-              maxAttempts: 16
-              multiplier: 2
-      - steps:
-        - type: task
-          name: Split
-          resourceArn: acs:fc:::services/video-demo/functions/split
-          retry:
-            - errors:
-              - FC.ResourceThrottled
-              - FC.ResourceExhausted
-              - FC.InternalServerError
-              - FnF.TaskTimeout
-              - FC.Unknown
-              intervalSeconds: 3
-              maxAttempts: 16
-              multiplier: 2
-        - type: parallel
-          name: Transcode
-          branches:
-            - steps:
-                - type: foreach
-                  name: Transcode_splits_avi
-                  inputMappings:
-                    - source: .avi
-                      target: target_type
-                    - source: $input.split_keys
-                      target: split_keys
-                    - source: $input.output_prefix
-                      target: output_prefix
-                    - source: $input.oss_bucket_name
-                      target: oss_bucket_name
-                  iterationMapping:
-                    collection: $.split_keys
-                    index: index
-                    item: video_key
-                  steps:
-                    - type: task
-                      name: Transcode_avi
-                      resourceArn: acs:fc:::services/video-demo/functions/transcode
-                      retry:
-                        - errors:
-                          - FC.ResourceThrottled
-                          - FC.ResourceExhausted
-                          - FC.InternalServerError
-                          - FnF.TaskTimeout
-                          - FC.Unknown
-                          intervalSeconds: 3
-                          maxAttempts: 16
-                          multiplier: 2
-                - type: task
-                  name: Merge_avi
-                  resourceArn: acs:fc:::services/video-demo/functions/merge
-                  retry:
-                    - errors:
-                      - FC.ResourceThrottled
-                      - FC.ResourceExhausted
-                      - FC.InternalServerError
-                      - FnF.TaskTimeout
-                      - FC.Unknown
-                      intervalSeconds: 3
-                      maxAttempts: 16
-                      multiplier: 2
-                  inputMappings:
-                  - source: $input.video_key
-                    target: video_key
-                  - source: .avi
-                    target: target_type
-                  - source: $input.output_prefix
-                    target: output_prefix
-                  - source: $input.oss_bucket_name
-                    target: oss_bucket_name
-                  - source: $input.split_keys
-                    target: split_keys
-                  - source: $input.video_proc_dir
-                    target: video_proc_dir
-                  
-            - steps:
-                - type: foreach
-                  name: Transcode_splits_mp4
-                  inputMappings:
-                    - source: .mp4
-                      target: target_type
-                    - source: $input.split_keys
-                      target: split_keys
-                    - source: $input.output_prefix
-                      target: output_prefix
-                    - source: $input.oss_bucket_name
-                      target: oss_bucket_name
-                  iterationMapping:
-                    collection: $.split_keys
-                    index: index
-                    item: video_key
-                  steps:
-                    - type: task
-                      name: Transcode_mp4
-                      resourceArn: acs:fc:::services/video-demo/functions/transcode
-                      retry:
-                        - errors:
-                          - FC.ResourceThrottled
-                          - FC.ResourceExhausted
-                          - FC.InternalServerError
-                          - FnF.TaskTimeout
-                          - FC.Unknown
-                          intervalSeconds: 3
-                          maxAttempts: 16
-                          multiplier: 2
-                - type: task
-                  name: Merge_mp4
-                  resourceArn: acs:fc:::services/video-demo/functions/merge
-                  retry:
-                    - errors:
-                      - FC.ResourceThrottled
-                      - FC.ResourceExhausted
-                      - FC.InternalServerError
-                      - FnF.TaskTimeout
-                      - FC.Unknown
-                      intervalSeconds: 3
-                      maxAttempts: 16
-                      multiplier: 2
-                  inputMappings:
-                    - source: $input.video_key
-                      target: video_key
-                    - source: .mp4
-                      target: target_type
-                    - source: $input.output_prefix
-                      target: output_prefix
-                    - source: $input.oss_bucket_name
-                      target: oss_bucket_name
-                    - source: $input.split_keys
-                      target: split_keys
-                    - source: $input.video_proc_dir
-                      target: video_proc_dir
-            - steps:
-                - type: foreach
-                  name: Transcode_splits_flv
-                  inputMappings:
-                    - source: .flv
-                      target: target_type
-                    - source: $input.split_keys
-                      target: split_keys
-                    - source: $input.output_prefix
-                      target: output_prefix
-                    - source: $input.oss_bucket_name
-                      target: oss_bucket_name
-                  iterationMapping:
-                    collection: $.split_keys
-                    index: index
-                    item: video_key
-                  steps:
-                    - type: task
-                      name: Transcode_flv
-                      resourceArn: acs:fc:::services/video-demo/functions/transcode
-                      retry:
-                        - errors:
-                          - FC.ResourceThrottled
-                          - FC.ResourceExhausted
-                          - FC.InternalServerError
-                          - FnF.TaskTimeout
-                          - FC.Unknown
-                          intervalSeconds: 3
-                          maxAttempts: 16
-                          multiplier: 2
-                - type: task
-                  name: Merge_flv
-                  resourceArn: acs:fc:::services/video-demo/functions/merge
-                  retry:
-                    - errors:
-                      - FC.ResourceThrottled
-                      - FC.ResourceExhausted
-                      - FC.InternalServerError
-                      - FnF.TaskTimeout
-                      - FC.Unknown
-                      intervalSeconds: 3
-                      maxAttempts: 16
-                      multiplier: 2
-                  inputMappings:
-                    - source: $input.video_key
-                      target: video_key
-                    - source: .flv
-                      target: target_type
-                    - source: $input.output_prefix
-                      target: output_prefix
-                    - source: $input.oss_bucket_name
-                      target: oss_bucket_name
-                    - source: $input.split_keys
-                      target: split_keys
-                    - source: $input.video_proc_dir
-                      target: video_proc_dir
-          outputMappings:
-            - target: video_proc_dir
-              source: $input.video_proc_dir
-        - type: task
-          name: after-process
-          resourceArn: acs:fc:::services/video-demo/functions/after-process
-          retry:
-            - errors:
-              - FC.ResourceThrottled
-              - FC.ResourceExhausted
-              - FC.InternalServerError
-              - FnF.TaskTimeout
-              - FC.Unknown
-              intervalSeconds: 3
-              maxAttempts: 16
-              multiplier: 2
+            intervalSeconds: 3
+            maxAttempts: 16
+            multiplier: 2
+    outputMappings:
+      - target: video_proc_dir
+        source: $input.video_proc_dir
+  - type: task
+    name: after-process
+    resourceArn: 'acs:fc:::services/video-demo/functions/after-process'
+    retry:
+      - errors:
+          - FC.ResourceThrottled
+          - FC.ResourceExhausted
+          - FC.InternalServerError
+          - FnF.TaskTimeout
+          - FC.Unknown
+        intervalSeconds: 3
+        maxAttempts: 16
+        multiplier: 2

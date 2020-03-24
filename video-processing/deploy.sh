@@ -1,7 +1,5 @@
 set -e
 
-STACK_NAME=video-processing-demo-$(date +%s)
-
 # init nas and vpc
 fun nas init
 

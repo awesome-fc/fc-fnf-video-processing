@@ -67,7 +67,8 @@ def mock_upload_video_2_oss(event, index):
         "output_prefix": os.path.join(OUTPUT_DST, str(index)),
         # 视频 25 s 一个分片, 这个值根据具体情况设置， 
         # 如果想加速视频转码，这个值可以设置小点， 但是此时对于一个视频，转码需要更多的机器资源
-        "segment_time_seconds": 25
+        "segment_time_seconds": 25,
+        "dst_formats": ["flv", "mp4"]
     }
 
     try:

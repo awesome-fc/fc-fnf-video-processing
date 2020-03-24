@@ -27,7 +27,6 @@ Resources:
                 - oss:GetObject
                 - oss:PutObject
                 - fc:InvokeFunction
-                - ots:*
               Resource: '*'
     split:
       Type: 'Aliyun::Serverless::Function'
@@ -37,15 +36,6 @@ Resources:
         Timeout: 600
         MemorySize: 1024
         CodeUri: functions/split
-
-    extract-audio:
-      Type: 'Aliyun::Serverless::Function'
-      Properties:
-        Handler: index.handler
-        Runtime: python2.7
-        Timeout: 600
-        MemorySize: 1024
-        CodeUri: functions/extract-audio
 
     transcode:
       Type: 'Aliyun::Serverless::Function'
@@ -101,6 +91,7 @@ Resources:
             OUTPUT_DST: fnf_video/outputs/oss-trigger/
             FLOW_NAME: video-demo-flow
             SEG_INTERVAL: 30  # 视频 30 s 一个分片
+            DST_FORMATS: "mp4, flv, avi" # 转码的目标格式，字符串类型， 以 , 分割区分
         Events:
           oss-t:
             Type: OSS
@@ -112,7 +103,7 @@ Resources:
               Filter:
                 Key:
                   Prefix: fnf_video/inputs/
-                  Suffix: .mov
+                  Suffix: ''
               BucketName: fc-hz-demo  # change to your bucket
 
   video-demo-flow:

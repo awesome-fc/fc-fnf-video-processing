@@ -6,7 +6,7 @@
 最新有关 simple-video-processing 的内容请移步到 [simple-video-processing](https://github.com/awesome-fc/simple-video-processing)
 
 
-## deprecated
+## Deprecated
 
 假设您是对短视频进行简单的处理， 架构方案图如下：
 

@@ -24,7 +24,7 @@ def exec_FFmpeg_cmd(cmd_lst):
         LOGGER.error('cmd:{}'.format(exc.cmd))
         LOGGER.error('output:{}'.format(exc.output))
         # log json to Log Service as db
-        # or insert record in mysql, etc
+        # or insert record in mysql, etc ...
         raise FFmpegError(exc.output, exc.returncode)
 
 # a decorator for print the excute time of a function
@@ -46,11 +46,11 @@ def get_fileNameExt(filename):
 def handler(event, context):
     evt = json.loads(event)
     # split video key, locate in nas
-    input_path = evt['video_key'] 
+    input_path = evt['split_video_key']
     fileDir, shortname, extension = get_fileNameExt(input_path)
 
     target_type = evt['target_type']
-    transcoded_filename = 'transcoded_%s%s' % (shortname, target_type)
+    transcoded_filename = 'transcoded_%s.%s' % (shortname, target_type)
     transcoded_filepath = os.path.join(fileDir, transcoded_filename)
 
     if os.path.exists(transcoded_filepath):

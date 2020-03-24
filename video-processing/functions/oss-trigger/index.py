@@ -14,6 +14,7 @@ LOGGER = logging.getLogger()
 OUTPUT_DST = os.environ["OUTPUT_DST"]
 FLOW_NAME = os.environ["FLOW_NAME"]
 SEG_INTERVAL = os.environ["SEG_INTERVAL"]
+DST_FORMATS = os.environ["DST_FORMATS"]
 
 def handler(event, context):
     evt = json.loads(event)
@@ -24,12 +25,16 @@ def handler(event, context):
     creds = context.credentials
     sts_token_credential = StsTokenCredential(creds.access_key_id, creds.access_key_secret, creds.security_token)
     client = AcsClient(region_id=context.region, credential=sts_token_credential)
+    
+    dst_formats = DST_FORMATS.split(",")
+    dst_formats = [i.strip() for i in dst_formats]
 
     input = {
         "oss_bucket_name": oss_bucket_name,
         "video_key": object_key,
         "output_prefix": OUTPUT_DST,
-        "segment_time_seconds": int(SEG_INTERVAL)
+        "segment_time_seconds": int(SEG_INTERVAL),
+        "dst_formats": dst_formats
     }
     
     try:

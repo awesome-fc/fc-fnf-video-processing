@@ -30,7 +30,7 @@ def exec_FFmpeg_cmd(cmd_lst):
         LOGGER.error('cmd:{}'.format(exc.cmd))
         LOGGER.error('output:{}'.format(exc.output))
         # log json to Log Service as db
-        # or insert record in mysql, etc
+        # or insert record in mysql, etc ...
         raise FFmpegError(exc.output, exc.returncode)
 
 # a decorator for print the excute time of a function
@@ -63,7 +63,7 @@ def handler(event, context):
     transcoded_split_keys = []
     for k in split_keys:
         fileDir, shortname, extension = get_fileNameExt(k)
-        transcoded_filename = 'transcoded_%s%s' % (shortname, video_type)
+        transcoded_filename = 'transcoded_%s.%s' % (shortname, video_type)
         transcoded_filepath = os.path.join(fileDir, transcoded_filename)
         transcoded_split_keys.append(transcoded_filepath)
 
@@ -92,7 +92,7 @@ def handler(event, context):
         for filepath in transcoded_split_keys:
             f.write("file '%s'\n" % filepath)
 
-    merged_filename = 'merged_' + shortname + video_type
+    merged_filename = 'merged_' + shortname + "." + video_type
     merged_filepath = os.path.join(video_process_dir, merged_filename)
 
     if os.path.exists(merged_filepath):

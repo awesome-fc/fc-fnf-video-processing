@@ -32,7 +32,7 @@ def exec_FFmpeg_cmd(cmd_lst):
         LOGGER.error('cmd:{}'.format(exc.cmd))
         LOGGER.error('output:{}'.format(exc.output))
         # log json to Log Service as db
-        # or insert record in mysql, etc
+        # or insert record in mysql, etc ...
         raise FFmpegError(exc.output, exc.returncode)
 
 # a decorator for print the excute time of a function
@@ -69,7 +69,6 @@ def handler(event, context):
     video_name = shortname + extension
     
     video_proc_dir = NAS_ROOT + context.request_id
-    #os.system("mkdir -p {}".format(video_proc_dir))
     os.mkdir(video_proc_dir)
     os.system("chmod -R 777 " + video_proc_dir)
 
@@ -97,4 +96,7 @@ def handler(event, context):
             filekey = os.path.join(video_proc_dir, filename)
             split_keys.append(filekey)
 
-    return {"split_keys": split_keys, "video_proc_dir": video_proc_dir}
+    return {
+        "split_keys": split_keys, 
+        "video_proc_dir": video_proc_dir
+    }

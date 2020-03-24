@@ -15,15 +15,15 @@ python pressure_test.py 3
 
 **FnF 流程同时启动 excution**
 
-![p1](p1.png)
+![p1](https://img.alicdn.com/tfs/TB1RKkWzhD1gK0jSZFKXXcJrVXa-2140-488.png)
 
 **所有的 FnF 流程都成功执行**
 
-![p2](p2.png)
+![p2](https://img.alicdn.com/tfs/TB1GnIWzbj1gK0jSZFOXXc7GpXa-2068-496.png)
 
 **并发转码的结果**
 
-![p3](p3.png)
+![p3](https://img.alicdn.com/tfs/TB1d2EWzhD1gK0jSZFKXXcJrVXa-1550-322.png)
 
 ## 性能优异
 
