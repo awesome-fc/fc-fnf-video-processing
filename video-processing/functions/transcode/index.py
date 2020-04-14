@@ -18,13 +18,14 @@ class FFmpegError(Exception):
 
 def exec_FFmpeg_cmd(cmd_lst):
     try:
-        result = subprocess.run(
+        subprocess.run(
             cmd_lst, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
     except subprocess.CalledProcessError as exc:
         LOGGER.error('returncode:{}'.format(exc.returncode))
         LOGGER.error('cmd:{}'.format(exc.cmd))
         LOGGER.error('output:{}'.format(exc.output))
-        LOGGER.error('detail:{}'.format(result.stderr.decode()))
+        LOGGER.error('stderr:{}'.format(exc.stderr))
+        LOGGER.error('stdout:{}'.format(exc.stdout))
         # log json to Log Service as db
         # or insert record in mysql, etc ...
         raise FFmpegError(exc.output, exc.returncode)
