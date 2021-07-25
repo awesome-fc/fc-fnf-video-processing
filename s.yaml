@@ -1,0 +1,126 @@
+edition: 1.0.0
+name: fnf-video-processing
+access: default
+
+vars:
+  region: cn-shenzhen
+  # fnf 函数计算服务
+  video-demo:
+    name: video-demo
+    description: fnf-video-processing
+    role: 'acs:ram::xxxx:role/video-demo-fc-role'
+    internetAccess: true
+    # nas 用于存放转码相关可执行文件
+    nasConfig: auto
+    vpcConfig: auto
+    logConfig:
+      project: sls-transcode-demo
+      logstore: fc-log
+
+services:
+  # serverless 工作流日志工程
+  sls-transcode-demo:
+    component: devsapp/sls
+    props:
+      regionId: ${vars.region}
+      project: sls-transcode-demo
+      description: The log of all the functions of video transcoder app
+      logstore: fc-log
+      logstoreOption:
+        ttl: 10
+        shardCount: 1
+  # fnf 服务配置
+  video-demo-flow:
+    component: devsapp/fnf
+    props:
+      name: video-demo-flow
+      region: ${vars.region}
+      description: FnF video processing demo flow
+      definition: src/flows/video-processing-fc.yaml
+      roleArn: 'acs:ram::xxxx:role/video-demo-flow-role'
+  # 函数计算配置
+  fc-video-demo-split:
+    component: devsapp/fc
+    props:
+      region: ${vars.region}
+      service: ${vars.video-demo}
+      function:
+        name: split
+        handler: index.handler
+        timeout: 600
+        memorySize: 1024
+        runtime: python3
+        codeUri: src/functions/split
+  fc-video-demo-transcode:
+    component: devsapp/fc
+    props:
+      region: ${vars.region}
+      service: ${vars.video-demo}
+      function:
+        name: transcode
+        handler: index.handler
+        timeout: 600
+        memorySize: 3072
+        runtime: python3
+        codeUri: src/functions/transcode
+  fc-video-demo-merge:
+    component: devsapp/fc
+    props:
+      region: ${vars.region}
+      service: ${vars.video-demo}
+      function:
+        name: merge
+        handler: index.handler
+        timeout: 600
+        memorySize: 1024
+        runtime: python3
+        codeUri: src/functions/merge
+  fc-video-demo-after-process:
+    component: devsapp/fc
+    props:
+      region: ${vars.region}
+      service: ${vars.video-demo}
+      function:
+        name: after-process
+        handler: index.handler
+        timeout: 120
+        memorySize: 128
+        runtime: python3
+        codeUri: src/functions/after-process
+  fc-oss-trigger-trigger-fnf:
+    component: devsapp/fc
+    props:
+      region: ${vars.region}
+      service:
+        name: oss-trigger
+        description: oss trigger function to call fnf to process video
+        role: 'acs:ram::xxxx:role/video-demo-fc-role'
+        internetAccess: true
+        logConfig:
+          project: sls-transcode-demo
+          logstore: fc-log
+      function:
+        name: trigger-fnf
+        handler: index.handler
+        timeout: 120
+        memorySize: 128
+        runtime: python3
+        codeUri: src/functions/oss-trigger
+        environmentVariables:
+          OUTPUT_DST: fnf_video/outputs/oss-trigger/
+          FLOW_NAME: video-demo-flow
+          SEG_INTERVAL: 30
+          DST_FORMATS: mp4, flv, avi
+      triggers:
+        - name: oss-t
+          type: oss
+          config:
+            events:
+              - oss:ObjectCreated:PutObject
+              - oss:ObjectCreated:PostObject
+              - oss:ObjectCreated:CompleteMultipartUpload
+            filter:
+              Key:
+                Prefix: fnf_video/inputs/
+                Suffix: ''
+            bucketName: bucket-demo

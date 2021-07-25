@@ -3,4 +3,4 @@
 .Funfile.generated.dockerfile
 .DS_Store
 .vscode*
-*/.fun
+.s
