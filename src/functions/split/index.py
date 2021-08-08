@@ -15,8 +15,6 @@ LOGGER = logging.getLogger()
 MAX_SPLIT_NUM = 100
 
 NAS_ROOT = "/mnt/auto/"
-FFMPEG_BIN = NAS_ROOT + "ffmpeg"
-FFPROBE_BIN = NAS_ROOT + "ffprobe"
 
 class FFmpegError(Exception):
     def __init__(self, message, status):
@@ -55,7 +53,7 @@ def get_fileNameExt(filename):
 
 def getVideoDuration(input_video):
     cmd = '{0} -i {1} -show_entries format=duration -v quiet -of csv="p=0"'.format(
-        FFPROBE_BIN, input_video)
+        'ffprobe', input_video)
     raw_result = subprocess.check_output(cmd, shell=True)
     result = raw_result.decode().replace("\n", "").strip()
     duration = float(result)
@@ -90,7 +88,7 @@ def handler(event, context):
         segment_time_seconds = int(math.ceil(video_duration/MAX_SPLIT_NUM)) + 1
     
     segment_time_seconds = str(segment_time_seconds)
-    exec_FFmpeg_cmd([FFMPEG_BIN, '-i', input_path, "-c", "copy", "-f", "segment", "-segment_time",
+    exec_FFmpeg_cmd(['ffmpeg', '-i', input_path, "-c", "copy", "-f", "segment", "-segment_time",
                      segment_time_seconds, "-reset_timestamps", "1", video_proc_dir + "/split_" + shortname + '_piece_%02d' + extension])
 
     split_keys = []

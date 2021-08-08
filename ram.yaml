@@ -3,19 +3,6 @@ name: fnf-video-processing
 access: default
 
 services:
-  video-demo-flow-role:
-    component: devsapp/ram
-    props:
-      name: video-demo-flow-role
-      description: Function Flow Default Role
-      service: fnf.aliyuncs.com
-      policies:
-        - AliyunOSSFullAccess
-        - AliyunNASFullAccess
-        - AliyunFnFFullAccess
-        - AliyunFCInvocationAccess
-        - AliyunLogFullAccess
-  
   video-demo-fc-role:
     component: devsapp/ram
     props:
@@ -28,3 +15,20 @@ services:
         - AliyunFnFFullAccess
         - AliyunFCInvocationAccess
         - AliyunLogFullAccess
+        - ReadOnlyAccess
+        - AliyunFCDefaultRolePolicy
+
+  video-demo-flow-role:
+    component: devsapp/ram
+    props:
+      name: video-demo-flow-role
+      description: Function Flow Default Role
+      service: fnf.aliyuncs.com
+      policies:
+        - AliyunOSSFullAccess
+        - AliyunNASFullAccess
+        - AliyunFnFFullAccess
+        - AliyunFCInvocationAccess
+        - AliyunLogFullAccess
+        - ReadOnlyAccess
+        - AliyunFCDefaultRolePolicy

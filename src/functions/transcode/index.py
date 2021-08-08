@@ -7,8 +7,6 @@ import time
 
 LOGGER = logging.getLogger()
 
-NAS_ROOT = "/mnt/auto/"
-FFMPEG_BIN = NAS_ROOT + "ffmpeg"
 
 class FFmpegError(Exception):
     def __init__(self, message, status):
@@ -59,6 +57,6 @@ def handler(event, context):
     if os.path.exists(transcoded_filepath):
         os.remove(transcoded_filepath)
 
-    exec_FFmpeg_cmd([FFMPEG_BIN, '-y', '-i', input_path, transcoded_filepath])
+    exec_FFmpeg_cmd(['ffmpeg', '-y', '-i', input_path, transcoded_filepath])
     return {}
     

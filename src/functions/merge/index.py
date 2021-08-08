@@ -12,9 +12,6 @@ logging.getLogger("oss2.auth").setLevel(logging.ERROR)
 
 LOGGER = logging.getLogger()
 
-NAS_ROOT = "/mnt/auto/"
-FFMPEG_BIN = NAS_ROOT + "ffmpeg"
-
 
 class FFmpegError(Exception):
     def __init__(self, message, status):
@@ -101,7 +98,7 @@ def handler(event, context):
     if os.path.exists(merged_filepath):
         os.remove(merged_filepath)
 
-    exec_FFmpeg_cmd([FFMPEG_BIN, '-f', 'concat', '-safe', '0', '-i',
+    exec_FFmpeg_cmd(['ffmpeg', '-f', 'concat', '-safe', '0', '-i',
                      segs_filepath, '-c', 'copy', '-fflags', '+genpts', merged_filepath])
 
     LOGGER.info('output_prefix ' + output_prefix)

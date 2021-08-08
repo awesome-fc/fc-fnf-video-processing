@@ -10,9 +10,8 @@ vars:
     description: fnf-video-processing
     role: 'acs:ram::xxxx:role/video-demo-fc-role'
     internetAccess: true
-    # nas 用于存放转码相关可执行文件
-    nasConfig: auto
     vpcConfig: auto
+    nasConfig: auto
     logConfig:
       project: sls-transcode-demo
       logstore: fc-log

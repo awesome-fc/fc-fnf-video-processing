@@ -38,35 +38,20 @@ git clone  https://github.com/awesome-fc/fc-fnf-video-processing.git
 
 ![](https://i.loli.net/2021/07/25/6pcmq83RotBW2h5.png)
 
-- 将获取的 ARN 填入 `s.yaml` 对应位置中
+- 将获取的 ARN 复制到 `s.yaml` 对应位置中
 
 ### 3. 修改相关文件
-
-对于 `s.yaml` ：
 
 - 将配置中 role 的 xxx 替换为步骤2中获得的 ARN
 - 将 `bucket-demo` 替换为自己的 bucket
 - 将日志工程 `sls-transcode-demo` 替换为自己的日志工程，全局共有4处
 
-对于 `deploy.sh` :
-
-- 将日志工程 `sls-transcode-demo` 替换为自己的日志工程
-
 ### 4. 部署服务
 
-运行 `deploy.sh`，进行服务的部署。其中，包含 1 个日志工程，1 个函数工作流，以及 5 个函数。
+运行下列命令，进行服务的部署。其中，包含 1 个日志工程，1 个函数工作流，以及 5 个函数。
 
 ```bash
-./deploy.sh
-```
-
-### 5. 上传相关文件到 NAS
-
-我们需要将放置在 `bin` 目录中，处理视频转码的相关工具上传到 NAS。
-
-```bash
-s nas upload bin nas:///mnt/auto
-s nas command ls nas:///mnt/auto
+s deploy
 ```
 
 ## 编排测试 FC 函数的工作流
