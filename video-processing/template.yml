@@ -110,6 +110,6 @@ Resources:
     Type: 'Aliyun::Serverless::Flow'
     Properties:
       Description: FnF video processing demo flow
-      DefinitionUri: flows/video-processing-fc.yaml
+      DefinitionUri: flows/video-processing-fc.yml
       Policies:
         - AliyunFCInvocationAccess
