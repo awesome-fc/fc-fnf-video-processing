@@ -4,7 +4,7 @@
 
 该工程示例已经上线到函数计算应用中心，免费开通函数计算 即可在控制台应用中心 -> Video Transcoder 新建应用即查看到 。
 
-如下图所示， 假设用户上传一个 mov 格式的视频到 OSS, OSS 触发器自动触发函数执行， 函数调用 FnF 执行，FnF 同时进行 1 种或者多种格式的转码(由 template.yml 中的 DST_FORMATS 参数控制)， 本示例配置的是同时进行 mp4, flv, avi 格式的转码。
+如下图所示， 假设用户上传一个 mov 格式的视频到 OSS, OSS 触发器自动触发函数执行， 函数调用 FnF 执行，FnF 同时进行 1 种或者多种格式的转码(由 s.yaml 中的 DST_FORMATS 参数控制)， 本示例配置的是同时进行 mp4, flv, avi 格式的转码。
 
 您可以实现如下需求:
 
@@ -16,7 +16,7 @@
 
 ![image](https://img.alicdn.com/tfs/TB1A.PSzrj1gK0jSZFuXXcrHpXa-570-613.png)
 
-您可以直接基于示例工程部署您的全功能视频处理系统服务， 但是当您想要处理视频逻辑消耗的内存不超过3G，处理时间不超过 10 min，即可以在一次函数执行完成的情况下，这个时候您可以直接参考[简单视频处理系统示例](https://github.com/awesome-fc/fc-fnf-video-processing/tree/master/simple-video-processing)
+**P.S.**  当您想要仅在一个简单的函数中直接完成视频处理逻辑时，可以参考[简单视频处理系统示例](https://github.com/awesome-fc/fc-fnf-video-processing/tree/master/simple-video-processing)
 
 ## 部署步骤
 
