@@ -2,7 +2,7 @@
 
 本项目是[轻松构建基于 Serverless 架构的弹性高可用音视频处理系统](https://yq.aliyun.com/articles/727684) 的示例工程
 
-该工程示例已经上线到函数计算应用中心，免费开通函数计算 即可在控制台应用中心 -> Video Transcoder  新建应用即查看到 。
+该工程示例已经上线到函数计算应用中心，免费开通函数计算 即可在控制台应用中心 -> Video Transcoder 新建应用即查看到 。
 
 如下图所示， 假设用户上传一个 mov 格式的视频到 OSS, OSS 触发器自动触发函数执行， 函数调用 FnF 执行，FnF 同时进行 1 种或者多种格式的转码(由 template.yml 中的 DST_FORMATS 参数控制)， 本示例配置的是同时进行 mp4, flv, avi 格式的转码。
 
@@ -68,11 +68,10 @@ s deploy
 }
 ```
 
-第2步： 在控制台观察流程执行
+第 2 步： 在控制台观察流程执行
 
 ## OSS 上传视频, 触发整个转码流程
 
 **效果示意图**
 
 ![](https://img.alicdn.com/tfs/TB1jgKSzCf2gK0jSZFPXXXsopXa-1280-720.gif)
-
