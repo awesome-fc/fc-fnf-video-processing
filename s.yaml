@@ -35,7 +35,7 @@ services:
       name: video-demo-flow
       region: ${vars.region}
       description: FnF video processing demo flow
-      definition: src/flows/video-processing-fc.yaml
+      definition: src/flows/video-processing-fc.yml
       roleArn: 'acs:ram::xxxx:role/video-demo-flow-role'
   # 函数计算配置
   fc-video-demo-split:
