@@ -52,7 +52,7 @@ def get_fileNameExt(filename):
     return shortname, extension
 
 def getVideoDuration(input_video):
-    cmd = '{0} -i {1} -show_entries format=duration -v quiet -of csv="p=0"'.format(
+    cmd = '{0} -i "{1}" -show_entries format=duration -v quiet -of csv="p=0"'.format(
         'ffprobe', input_video)
     raw_result = subprocess.check_output(cmd, shell=True)
     result = raw_result.decode().replace("\n", "").strip()
